@@ -23,11 +23,12 @@ if [ ! -f /usr/local/bin/ssh-copy-id ]; then
 fi
 
 echo "Installing the key on the server "$ssh_server
-ssh_string=$(echo $ssh_user"@"$ssh_server" -p"$ssh_port)
+ssh_string=$(echo $ssh_user"@"$ssh_server" -p"$ssh_port" -o PubkeyAuthentication=no")
+echo "ssh_string: $ssh_string"
 ssh-copy-id -i $ssh_keyfile "$ssh_string"
 
 echo "Updating .ssh/config on your machine"
-echo "\n\n# An alias to connect to "$ssh_alias" server\nHost "$ssh_alias"\n\tHostname "$ssh_server"\n\tUser "$ssh_user"\n\tPort "$ssh_port"\n\tIdentityFile "$ssh_keyfile"\n\n" >> $HOME/.ssh/config
+echo "\n\n# An alias to connect to "$ssh_alias" server\nHost "$ssh_alias"\n\tHostname "$ssh_server"\n\tUser "$ssh_user"\n\tPort "$ssh_port"\n\tIdentityFile "$ssh_keyfile"\n\tIdentitiesOnly yes\n\n" >> $HOME/.ssh/config
 
 echo "SSH into server using the alias"
 ssh $ssh_alias
